@@ -13,6 +13,9 @@ import thumbnail_decoder
 
 
 def main(source_url, no_results, name):
+    country_code = 'en'
+    # German host language is set to easily retrieve date
+    host_language = 'en'
 
     # time of scraping run
     start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -22,13 +25,19 @@ def main(source_url, no_results, name):
 
     max_results = True
 
+    # create needed directories
+    Path('data/').mkdir(parents=True, exist_ok=True)
+    Path('data/google/').mkdir(parents=True, exist_ok=True)
+    Path('data/google/matching_pages/').mkdir(parents=True, exist_ok=True)
+
     pages = google_ris_html_scraper.main(
-        source_url, no_results, name, start_time, max_results)
+        source_url, no_results, name, start_time, max_results, country_code, host_language)
     # pages = 32
     print('Pages searched through: ' + str(pages))
     # pages = round(int(no_results) / 10)
-    html_dir = 'htmlfiles/' + name + '/'
-    csv_dir = 'csvfiles/' + name + '/'
+    html_dir = 'data/google/matching_pages/htmlfiles/' + name + '_' + start_time + '/'
+    csv_dir = 'data/google/matching_pages/csvfiles/' + name + '/'
+    thumb_dir = 'data/google/matching_pages/thumbnails/' + name + '_' + start_time + '/'
 
     # list to store search results
     search_results = []
@@ -37,7 +46,8 @@ def main(source_url, no_results, name):
     # read html content to extract information to csv
     for i in range(0, pages):
         fname = html_dir + 'page_' + \
-            str(i+1) + '_at_' + start_time + '.html'
+            str(i+1) + '_' + country_code + '_host_lang_' + \
+            host_language + '_at_' + start_time + '.html'
         with open(fname, 'r') as f:
             page_content = f.read()
             soup = BeautifulSoup(page_content, 'html.parser')
@@ -98,16 +108,19 @@ def main(source_url, no_results, name):
                     search_result['thumbnail_res'] = None
 
                 try:
-                    search_result['date'] = None
-                    if ' · ' in search_result['description']:
-                        date_tmp = search_result['description'].split(
-                            ' · ')[-1].split('—')[0]
-                        if date_tmp.replace('.', '').strip().isdecimal():
-                            search_result['date'] = search_result['description'].split(
-                                ' · ')[-1].split('—')[0]
+                    date = search_result['description']
+                    if search_result['thumbnail_res'] != None:
+                        date = date.replace(search_result['thumbnail_res'], '')
 
-                    else:
-                        search_result['date'] = None
+                    if search_result['text'] != None:
+                        date = date.replace(search_result['text'], '')
+
+                    if date == search_result['description']:
+                        date = None
+
+                    search_result['date'] = date.replace(
+                        '—', '').replace(' · ', '')
+
                 except Exception as e:
                     search_result['date'] = None
 
@@ -125,10 +138,11 @@ def main(source_url, no_results, name):
 
             f.close()
     # store data
-    Path('csvfiles/').mkdir(parents=True, exist_ok=True)
-    Path('csvfiles/' + name + '/').mkdir(parents=True, exist_ok=True)
+    Path('data/google/matching_pages/csvfiles/').mkdir(parents=True, exist_ok=True)
+    Path(csv_dir).mkdir(parents=True, exist_ok=True)
     fname_csv = csv_dir + str(len(search_results)) + \
-        '_results_scraped_at_' + start_time + '.csv'
+        '_results_country_code_' + country_code + '_host_lang_' + \
+        host_language + '_scraped_at_' + start_time + '.csv'
     keys = search_results[0].keys()
     with open(fname_csv, 'w', newline='') as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
@@ -136,8 +150,8 @@ def main(source_url, no_results, name):
         dict_writer.writerows(search_results)
         output_file.close()
 
-    # decode retrieved thumbnails to png in separate folder 
-    thumbnail_decoder(fname_csv, name + '/')
+    # decode retrieved thumbnails from csv to pngs in separate folder
+    thumbnail_decoder.main(fname_csv, thumb_dir)
 
 
 if __name__ == "__main__":

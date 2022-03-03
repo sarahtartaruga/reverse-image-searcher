@@ -8,7 +8,7 @@ import datetime
 import sys
 
 
-def main(source_url, no_results, name, timestamp, max_results):
+def main(source_url, no_results, name, timestamp, max_results, country_code, host_language):
 
     # number of pages processed
     pages = 1
@@ -21,15 +21,15 @@ def main(source_url, no_results, name, timestamp, max_results):
     # choose incognito mode to open a private window mode
     options.add_argument("--incognito")
     # for testing on your local computer with a GUI, have chrome installed and uncomment line below
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     # headless browsing works without GUI but needs fix window size for infinite scroll scraping
     options.add_argument("window-size=1920,1080")
 
     # options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
 
-    country_code = 'en'
-    # German host language is set to easily retrieve date
-    host_language = 'de'
+    # country_code = 'en'
+    # # German host language is set to easily retrieve date
+    # host_language = 'de'
 
     google_isearch = 'https://images.google.com/imghp?hl=' + \
         host_language + '&gl=' + country_code
@@ -73,13 +73,20 @@ def main(source_url, no_results, name, timestamp, max_results):
             # for i in range(0, pages):
             while True:
                 htmlcontent = driver.page_source
-                Path('htmlfiles/').mkdir(parents=True, exist_ok=True)
-                Path('htmlfiles/' + name + '/').mkdir(parents=True, exist_ok=True)
-                fh = open('htmlfiles/' + name + '/page_' +
-                          str(pages) + '_at_' + timestamp + '.html', 'w')
+                Path('data/').mkdir(parents=True, exist_ok=True)
+                Path('data/google/').mkdir(parents=True, exist_ok=True)
+                Path('data/google/matching_pages/').mkdir(parents=True, exist_ok=True)
+                Path(
+                    'data/google/matching_pages/htmlfiles/').mkdir(parents=True, exist_ok=True)
+                
+                Path('data/google/matching_pages/htmlfiles/' +
+                     name + '_' + timestamp + '/').mkdir(parents=True, exist_ok=True)
+                fh = open('data/google/matching_pages/htmlfiles/' + name + '_' + timestamp + '/page_' +
+                          str(pages) + '_' + country_code + '_host_lang_' +
+                          host_language + '_at_' + timestamp + '.html', 'w')
                 fh.write(htmlcontent)
 
-                time.sleep(10)
+                time.sleep(4)
                 if max_results == False:
                     if pages > round(int(no_results) / 10):
                         print('Achieved result number')
@@ -113,4 +120,7 @@ if __name__ == "__main__":
     name = sys.argv[3]
     timestamp = sys.argv[4]
     max_results = sys.argv[5]
-    main(url, no_results, name, timestamp, max_results)
+    country_code = sys.argv[6]
+    host_language = sys.argv[7]
+    main(url, no_results, name, timestamp,
+         max_results, country_code, host_language)
