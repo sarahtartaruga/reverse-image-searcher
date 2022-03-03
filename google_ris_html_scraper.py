@@ -21,16 +21,18 @@ def main(source_url, no_results, name, timestamp, max_results):
     # choose incognito mode to open a private window mode
     options.add_argument("--incognito")
     # for testing on your local computer with a GUI, have chrome installed and uncomment line below
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     # headless browsing works without GUI but needs fix window size for infinite scroll scraping
     options.add_argument("window-size=1920,1080")
 
     # options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
 
-    language_code = 'en'
-    # google_isearch = 'https://www.google.com/imghp'
+    country_code = 'en'
+    # German host language is set to easily retrieve date
+    host_language = 'de'
+
     google_isearch = 'https://images.google.com/imghp?hl=' + \
-        language_code + '&gl=' + language_code
+        host_language + '&gl=' + country_code
 
     driver = webdriver.Chrome(webdriver_path, options=options)
 
@@ -77,9 +79,10 @@ def main(source_url, no_results, name, timestamp, max_results):
                           str(pages) + '_at_' + timestamp + '.html', 'w')
                 fh.write(htmlcontent)
 
-                time.sleep(4)
-                if not max_results:
-                    if pages >= round(int(no_results) / 10):
+                time.sleep(10)
+                if max_results == False:
+                    if pages > round(int(no_results) / 10):
+                        print('Achieved result number')
                         break
                 try:
                     next_button = driver.find_element_by_xpath(
@@ -87,9 +90,10 @@ def main(source_url, no_results, name, timestamp, max_results):
                     driver.execute_script(
                         "arguments[0].scrollIntoView();", next_button)
                     next_button.click()
+                    print('Processed page ' + str(pages))
                     pages = pages + 1
-                    print('Processed page ' + pages)
                 except Exception as e:
+                    print('Something went wrong with clicking next button ' + str(e))
                     break
 
         except Exception as e:

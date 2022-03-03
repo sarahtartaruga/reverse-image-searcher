@@ -1,4 +1,7 @@
 *.html
 *.csv
+*.png
+.DS_Store
+*.pyc
 /csvfiles
 /htmlfiles
