@@ -21,7 +21,7 @@ def main(source_url, no_results, name, country_code, host_language, timestamp):
     # choose incognito mode to open a private window mode
     options.add_argument("--incognito")
     # for testing on your local computer with a GUI, have chrome installed and uncomment line below
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     # headless browsing works without GUI but needs fix window size for infinite scroll scraping
     options.add_argument("window-size=1920,1080")
 
@@ -75,6 +75,20 @@ def main(source_url, no_results, name, country_code, host_language, timestamp):
         print(e)
 
     # third step: scroll down as long as result amount corresponds with wished result
+    results = []
+    try:
+        while len(results) < int(no_results):
+            old_amount_results = len(results)
+            print('Current amount of results : ' + str(len(results)))
+            results = driver.find_elements_by_css_selector(
+                "div[class='isv-r PNCib MSM1fd BUooTd']")
+            driver.execute_script(
+                "window.scrollTo(0,document.body.scrollHeight)")
+            time.sleep(5)
+            if old_amount_results == len(results):
+                break
+    except Exception as e:
+        print('Issue with scrolling ' + str(e))
 
     # fourth step: save html data
     try:

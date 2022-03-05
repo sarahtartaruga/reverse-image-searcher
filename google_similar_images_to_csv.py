@@ -13,16 +13,16 @@ import google_similar_images_html_scraper
 import thumbnail_decoder
 
 def main(source_url, no_results, name):
-    # timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    timestamp = '2022-03-05_13-15-57'
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    # timestamp = '2022-03-05_13-15-57'
 
     # selenium webdriver settings
     country_code = 'en'
     host_language = 'en'
 
     # first step: conduct reverse image search and store html files
-    # google_similar_images_html_scraper.main(
-    #     source_url, no_results, name, country_code, host_language, timestamp)
+    google_similar_images_html_scraper.main(
+        source_url, no_results, name, country_code, host_language, timestamp)
 
     # from html data retrieve relevant data as csv file
 
@@ -54,7 +54,7 @@ def main(source_url, no_results, name):
             search_result['rank'] = len(search_results)
 
             try:
-                search_result['url'] = search_result['title'] = result.find(
+                search_result['url'] = result.find(
                     'a', {'class': ['VFACy', 'kGQAp', 'sMi44c', 'lNHeqe', 'WGvvNb']})['href']
             except Exception as e:
                 search_result['url'] = None
@@ -115,8 +115,6 @@ def main(source_url, no_results, name):
 
     # sixth step: from csv file retrieve thumbnails
     thumbnail_decoder.main(fname_csv, thumb_dir)
-
-
 
 if __name__ == "__main__":
     url = sys.argv[1]
