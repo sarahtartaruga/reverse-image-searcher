@@ -1,16 +1,18 @@
-# this script deploys a reverse image search on yandex for a given source image and scrapes 'Sites containing information about the image'
+# this script enables to retrieve similar image data of an image  as proposed by Google reverse image search
+
 import time
 from selenium import webdriver
 from pathlib import Path
 from selenium.webdriver.chrome.options import Options
+import datetime
+from bs4 import BeautifulSoup
+import csv
 import sys
 
 
-def main(source_url, no_results, name, timestamp, max_results, country_code, host_language):
+def main(source_url, no_results, name, country_code, host_language, timestamp):
 
-    # number of pages processed
-    pages = 1
-
+    # first step: conduct reverse image search
     # selenium webdriver settings
     # TODO: choose your local path to the downloaded webdriver
     webdriver_path = '/Users/work/GitHub/plexxxi/webdriver/chromedriver'
@@ -24,17 +26,18 @@ def main(source_url, no_results, name, timestamp, max_results, country_code, hos
     options.add_argument("window-size=1920,1080")
 
     yandex_isearch = 'https://yandex.com/images/'
-    # does usually not deliver any results
-    yandex_isearch_language = 'https://yandex.com/images/search?text=ukraine+lang%3A' + host_language
 
     driver = webdriver.Chrome(webdriver_path, options=options)
 
+    # click cookie consent
     try:
         driver.get(yandex_isearch)
-        time.sleep(2)
+        time.sleep(4)
     except Exception as e:
+        print('Issue with consent')
         print(e)
 
+    # image search setup
     ris_button = None
     try:
         ris_button = driver.find_element_by_xpath(
@@ -59,29 +62,31 @@ def main(source_url, no_results, name, timestamp, max_results, country_code, hos
     except Exception as e:
         print('Could not submit query correctly: ' + str(e))
 
-        # container: //*[@id="CbirSites_infinite-NzQkc36"]/section
+ # second step: head to similar images
+    try:
+        driver.execute_script(
+            "window.scrollTo(0,600)")
+        driver.find_element_by_css_selector(
+            "a[class='Button2 Button2_view_action Button2_type_link Button2_tone_smooth Button2_size_l Button2_width_max CbirSimilar-MoreButton']").click()
+        time.sleep(3)
 
-        # fetch data
+    except Exception as e:
+        print('Issue with heading to similar images')
+        print(e)
 
     # third step: scroll down as long as result amount corresponds with wished result
     results = []
     try:
-        scroll_counter = 1
         while len(results) < int(no_results):
             old_amount_results = len(results)
             print('Current amount of results : ' + str(len(results)))
-            results = driver.find_elements_by_css_selector(
-                "div[class='CbirSites-Item']")
+            results = driver.find_elements_by_css_selector("div[class='serp-item__preview']")
+
             driver.execute_script(
                 "window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(5)
-            # driver.execute_script(
-            #     "window.scrollTo(0," + str(500 * scroll_counter) + ")")
-            # time.sleep(1)
-            scroll_counter = scroll_counter + 1
+
             if old_amount_results == len(results):
-                print('After ' + str(scroll_counter) +
-                      ' scrolls amount is the same')
                 break
     except Exception as e:
         print('Issue with scrolling ' + str(e))
@@ -92,12 +97,12 @@ def main(source_url, no_results, name, timestamp, max_results, country_code, hos
         htmlcontent = driver.page_source
         Path('data/').mkdir(parents=True, exist_ok=True)
         Path('data/yandex/').mkdir(parents=True, exist_ok=True)
-        Path('data/yandex/info_pages/').mkdir(parents=True, exist_ok=True)
+        Path('data/yandex/similar_images/').mkdir(parents=True, exist_ok=True)
         Path(
-            'data/yandex/info_pages/htmlfiles/').mkdir(parents=True, exist_ok=True)
-        Path('data/yandex/info_pages/htmlfiles/' +
+            'data/yandex/similar_images/htmlfiles/').mkdir(parents=True, exist_ok=True)
+        Path('data/yandex/similar_images/htmlfiles/' +
              name + '/').mkdir(parents=True, exist_ok=True)
-        fh = open('data/yandex/info_pages/htmlfiles/' +
+        fh = open('data/yandex/similar_images/htmlfiles/' +
                   name + '/' + timestamp + '.html', 'w')
         fh.write(htmlcontent)
         fh.close()
@@ -114,9 +119,8 @@ if __name__ == "__main__":
     url = sys.argv[1]
     no_results = sys.argv[2]
     name = sys.argv[3]
-    timestamp = sys.argv[4]
-    max_results = sys.argv[5]
-    country_code = sys.argv[6]
-    host_language = sys.argv[7]
-    main(url, no_results, name, timestamp,
-         max_results, country_code, host_language)
+    country_code = sys.argv[4]
+    host_language = sys.argv[5]
+    timestamp = sys.argv[6]
+
+    main(url, no_results, name, country_code, host_language, timestamp)

@@ -29,119 +29,104 @@ def main(source_url, no_results, name):
     Path('data/yandex/').mkdir(parents=True, exist_ok=True)
     Path('data/yandex/info_pages/').mkdir(parents=True, exist_ok=True)
 
-    pages = yandex_info_pages_scraper.main(
+    yandex_info_pages_scraper.main(
         source_url, no_results, name, start_time, max_results, country_code, host_language)
-    # pages = 32
-    print('Pages searched through: ' + str(pages))
-    # pages = round(int(no_results) / 10)
-    html_dir = 'data/yandex/info_pages/htmlfiles/' + name + '_' + start_time + '/'
+    html_dir = 'data/yandex/info_pages/htmlfiles/' + name + '/'
     csv_dir = 'data/yandex/info_pages/csvfiles/' + name + '/'
     thumb_dir = 'data/yandex/info_pages/thumbnails/' + name + '_' + start_time + '/'
 
     # list to store search results
     search_results = []
 
-    possible_related_search = ''
     # read html content to extract information to csv
-    for i in range(0, pages):
-        fname = html_dir + 'page_' + \
-            str(i+1) + '_' + country_code + '_host_lang_' + \
-            host_language + '_at_' + start_time + '.html'
-        with open(fname, 'r') as f:
-            page_content = f.read()
-            soup = BeautifulSoup(page_content, 'html.parser')
+    fname = html_dir + start_time + '.html'
 
-            if i == 0:
-                possible_related_search = soup.find(
-                    'a', {'class': 'fKDtNb'}).text
-            # retrieve search results per page
-            results = soup.find_all('div', {'class': ['g', 'tF2Cxc']})
-            print('Found search results on page ' +
-                  str(i+1) + ' : ' + str(len(results)))
+    with open(fname, 'r') as f:
+        page_content = f.read()
+        soup = BeautifulSoup(page_content, 'html.parser')
+        f.close()
 
-            for result in results:
-                # print(result.prettify())
-                search_result = {}
-                print('Processing search result no ' +
-                      str(len(search_results) + 1))
+        results = soup.find_all(
+            'div', {'class': 'CbirSites-Item'})
+        print('Found ' + str(len(results)) + ' results')
 
-                search_result['rank'] = len(search_results)
-                search_result['possible_related_search'] = possible_related_search
+        for result in results:
+            search_result = {}
+            print('Processing search result no ' +
+                  str(len(search_results) + 1))
 
-                try:
-                    search_result['url'] = result.find(
-                        'div', {'class': 'yuRUbf'}).find('a')['href']
-                    search_result['domain'] = search_result['url'].replace(
-                        'https://', '').replace('http://', '').replace('www.', '').split('/')[0]
-                    search_result['country_code_tld'] = search_result['domain'].split(
-                        '.')[-1]
-                except Exception as e:
-                    search_result['url'] = None
-                    search_result['domain'] = None
-                    search_result['country_code_tld'] = None
+            search_result['rank'] = len(search_results)
 
-                try:
-                    search_result['title'] = result.find(
-                        'h3', {'class': 'LC20lb MBeuO DKV0Md'}).text
-                except Exception as e:
-                    search_result['title'] = None
-                try:
-                    container = result.find(
-                        'div', {'class': ['VwiC3b', 'yXK7lf', 'MUxGbd', 'yDYNvb', 'lyLwlc']})
+            try:
+                search_result['url'] = result.find(
+                    'div', {'class': 'CbirSites-ItemTitle'}).find('a')['href']
+            except Exception as e:
+                search_result['url'] = None
+                print('No url found ' + str(e))
 
-                    search_result['description'] = container.get_text()
-                    search_result['text'] = '—'.join(
-                        container.get_text().split('—')[1:])
+            try:
+                search_result['domain'] = result.find(
+                    'a', {'class': 'CbirSites-ItemDomain'}).text
+            except Exception as e:
+                search_result['domain'] = None
+                print('No domain found ' + str(e))
 
-                except Exception as e:
-                    search_result['description'] = None
-                    search_result['text'] = None
+            try:
+                search_result['country_code_tld'] = search_result['domain'].split(
+                    '.')[-1]
+            except Exception as e:
+                search_result['country_code_tld'] = None
+                print('No country code found ' + str(e))
 
-                try:
-                    if ' × ' in search_result['description']:
-                        search_result['thumbnail_res'] = search_result['description'].split('—')[
-                            0].split(' · ')[0]
-                    else:
-                        search_result['thumbnail_res'] = None
-                except Exception as e:
-                    search_result['thumbnail_res'] = None
+            try:
+                search_result['title'] = result.find(
+                    'div', {'class': 'CbirSites-ItemTitle'}).find('a').text
+            except Exception as e:
+                search_result['title'] = None
+                print('No title found ' + str(e))
 
-                try:
-                    date = search_result['description']
-                    if search_result['thumbnail_res'] != None:
-                        date = date.replace(search_result['thumbnail_res'], '')
+            try:
+                search_result['description'] = result.find(
+                    'div', {'class': 'CbirSites-ItemDescription'}).text
+            except Exception as e:
+                search_result['description'] = None
+                print('No info tag found ' + str(e))
 
-                    if search_result['text'] != None:
-                        date = date.replace(search_result['text'], '')
+            try:
+                search_result['thumbnail_res'] = result.find(
+                    'div', {'class': 'Thumb-Mark Typo Typo_text_s'}).text
+            except Exception as e:
+                search_result['thumbnail_res'] = None
+                print('No thumbnail res found ' + str(e))
 
-                    if date == search_result['description']:
-                        date = None
+            try:
+                # large thumbnails
+                search_result['thumbnail_url_original'] = result.find(
+                    'a', {'class': 'Thumb_type_inline'})['href']
+                # search_result['thumbnail_url'] = 'https:' + result.find(
+                #     'img', {'class': 'Thumb-Image'})['src']
+            except Exception as e:
+                search_result['thumbnail_url_original'] = None
+                print('No thumbnail url found ' + str(e))
 
-                    search_result['date'] = date.replace(
-                        '—', '').replace(' · ', '')
+            try:
+                # small thumbnails
+                search_result['thumbnail_url'] = 'https:' + result.find(
+                    'img', {'class': 'Thumb-Image'})['src']
+            except Exception as e:
+                search_result['thumbnail_url'] = None
+                print('No thumbnail url found ' + str(e))
 
-                except Exception as e:
-                    search_result['date'] = None
+            search_results.append(search_result)
+            if len(search_results) >= int(no_results):
+                break
 
-                try:
-                    search_result['thumbnail_url'] = result.find(
-                        'img', {'class': 'rISBZc zr758c'})['src']
-                except Exception as e:
-                    search_result['thumbnail_url'] = None
-
-                search_results.append(search_result)
-
-                if max_results == False:
-                    if len(search_results) > int(no_results):
-                        break
-
-            f.close()
+        f.close()
     # store data
     Path('data/yandex/info_pages/csvfiles/').mkdir(parents=True, exist_ok=True)
     Path(csv_dir).mkdir(parents=True, exist_ok=True)
     fname_csv = csv_dir + str(len(search_results)) + \
-        '_results_country_code_' + country_code + '_host_lang_' + \
-        host_language + '_scraped_at_' + start_time + '.csv'
+        '_results_scraped_at_' + start_time + '.csv'
     keys = search_results[0].keys()
     with open(fname_csv, 'w', newline='') as output_file:
         dict_writer = csv.DictWriter(output_file, keys)
@@ -149,7 +134,7 @@ def main(source_url, no_results, name):
         dict_writer.writerows(search_results)
         output_file.close()
 
-    # decode retrieved thumbnails from csv to pngs in separate folder
+    # sixth step: from csv file retrieve thumbnails
     thumbnail_decoder.main(fname_csv, thumb_dir)
 
 

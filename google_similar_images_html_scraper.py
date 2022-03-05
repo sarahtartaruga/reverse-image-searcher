@@ -113,10 +113,6 @@ def main(source_url, no_results, name, country_code, host_language, timestamp):
     # close driver when finished
     driver.quit()
 
-    # fifth step: from html data retrieve relevant data as csv file
-
-    # sixth step: from csv file retrieve thumbnails
-
 
 if __name__ == "__main__":
     url = sys.argv[1]
