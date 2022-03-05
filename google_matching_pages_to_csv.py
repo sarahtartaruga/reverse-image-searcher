@@ -13,9 +13,9 @@ import thumbnail_decoder
 
 
 def main(source_url, no_results, name):
-    country_code = 'en'
+    country_code = 'de'
     # German host language is set to easily retrieve date
-    host_language = 'en'
+    host_language = 'de'
 
     # time of scraping run
     start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')

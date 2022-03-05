@@ -1,12 +1,9 @@
 # this script deploys a reverse image search on google for a given source image and scrape search results
 import time
-from MySQLdb import Timestamp
 from selenium import webdriver
 from pathlib import Path
 from selenium.webdriver.chrome.options import Options
-import datetime
 import sys
-
 
 def main(source_url, no_results, name, timestamp, max_results, country_code, host_language):
 
@@ -24,8 +21,6 @@ def main(source_url, no_results, name, timestamp, max_results, country_code, hos
     options.add_argument("--headless")
     # headless browsing works without GUI but needs fix window size for infinite scroll scraping
     options.add_argument("window-size=1920,1080")
-
-    # options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
 
     # country_code = 'en'
     # # German host language is set to easily retrieve date
