@@ -15,10 +15,10 @@ import thumbnail_decoder
 def main(source_url, no_results, name):
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     # timestamp = '2022-03-05_13-15-57'
-
-    # selenium webdriver settings
-    country_code = 'en'
+    
+    country_code = 'us'
     host_language = 'en'
+
 
     # first step: conduct reverse image search and store html files
     google_similar_images_html_scraper.main(

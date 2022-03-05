@@ -8,7 +8,7 @@ from pathlib import Path
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import datetime
-import google_matching_pages_html_scraper
+import yandex_info_pages_scraper
 import thumbnail_decoder
 
 
@@ -26,17 +26,17 @@ def main(source_url, no_results, name):
 
     # create needed directories
     Path('data/').mkdir(parents=True, exist_ok=True)
-    Path('data/google/').mkdir(parents=True, exist_ok=True)
-    Path('data/google/matching_pages/').mkdir(parents=True, exist_ok=True)
+    Path('data/yandex/').mkdir(parents=True, exist_ok=True)
+    Path('data/yandex/info_pages/').mkdir(parents=True, exist_ok=True)
 
-    pages = google_matching_pages_html_scraper.main(
+    pages = yandex_info_pages_scraper.main(
         source_url, no_results, name, start_time, max_results, country_code, host_language)
     # pages = 32
     print('Pages searched through: ' + str(pages))
     # pages = round(int(no_results) / 10)
-    html_dir = 'data/google/matching_pages/htmlfiles/' + name + '_' + start_time + '/'
-    csv_dir = 'data/google/matching_pages/csvfiles/' + name + '/'
-    thumb_dir = 'data/google/matching_pages/thumbnails/' + name + '_' + start_time + '/'
+    html_dir = 'data/yandex/info_pages/htmlfiles/' + name + '_' + start_time + '/'
+    csv_dir = 'data/yandex/info_pages/csvfiles/' + name + '/'
+    thumb_dir = 'data/yandex/info_pages/thumbnails/' + name + '_' + start_time + '/'
 
     # list to store search results
     search_results = []
@@ -137,7 +137,7 @@ def main(source_url, no_results, name):
 
             f.close()
     # store data
-    Path('data/google/matching_pages/csvfiles/').mkdir(parents=True, exist_ok=True)
+    Path('data/yandex/info_pages/csvfiles/').mkdir(parents=True, exist_ok=True)
     Path(csv_dir).mkdir(parents=True, exist_ok=True)
     fname_csv = csv_dir + str(len(search_results)) + \
         '_results_country_code_' + country_code + '_host_lang_' + \

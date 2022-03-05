@@ -21,7 +21,7 @@ def main(source_url, no_results, name, country_code, host_language, timestamp):
     # choose incognito mode to open a private window mode
     options.add_argument("--incognito")
     # for testing on your local computer with a GUI, have chrome installed and uncomment line below
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     # headless browsing works without GUI but needs fix window size for infinite scroll scraping
     options.add_argument("window-size=1920,1080")
 
