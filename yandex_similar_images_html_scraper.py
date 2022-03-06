@@ -64,8 +64,9 @@ def main(source_url, no_results, name, country_code, host_language, timestamp):
 
  # second step: head to similar images
     try:
-        driver.execute_script(
-            "window.scrollTo(0,600)")
+        # driver.execute_script(
+        #     "window.scrollTo(100,600)")
+        # time.sleep(5)
         driver.find_element_by_css_selector(
             "a[class='Button2 Button2_view_action Button2_type_link Button2_tone_smooth Button2_size_l Button2_width_max CbirSimilar-MoreButton']").click()
         time.sleep(3)
