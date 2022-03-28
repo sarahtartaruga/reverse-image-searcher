@@ -19,13 +19,10 @@ def main(source_url, no_results, name):
     # use existing timestamp to change csv without scraping data from scratch
     # timestamp = '2022-03-05_21-58-35'
 
-    country_code = 'us'
-    host_language = 'en'
-
     # first step: conduct reverse image search and store html files
     # add on: if data has been scraped you can uncomment this line, adapt timestamp respectively and pass same name
     yandex_similar_images_html_scraper.main(
-        source_url, no_results, name, country_code, host_language, timestamp)
+        source_url, no_results, name, timestamp)
 
     # from html data retrieve relevant data as csv file
 

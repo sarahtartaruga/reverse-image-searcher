@@ -13,8 +13,6 @@ import thumbnail_decoder
 
 
 def main(source_url, no_results, name):
-    country_code = 'us'
-    host_language = 'en'
 
     # time of scraping run
     start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -22,15 +20,13 @@ def main(source_url, no_results, name):
     # scrape html content separately (can be disactivated if content has been scraped; but start_time must be adapted too)
     # start_time = '2022-03-03_09-09-28'
 
-    max_results = True
-
     # create needed directories
     Path('data/').mkdir(parents=True, exist_ok=True)
     Path('data/yandex/').mkdir(parents=True, exist_ok=True)
     Path('data/yandex/info_pages/').mkdir(parents=True, exist_ok=True)
 
     yandex_info_pages_scraper.main(
-        source_url, no_results, name, start_time, max_results, country_code, host_language)
+        source_url, no_results, name, start_time)
     html_dir = 'data/yandex/info_pages/htmlfiles/' + name + '/'
     csv_dir = 'data/yandex/info_pages/csvfiles/' + name + '/'
     thumb_dir = 'data/yandex/info_pages/thumbnails/' + name + '_' + start_time + '/'

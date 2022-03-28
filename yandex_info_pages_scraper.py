@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 import sys
 
 
-def main(source_url, no_results, name, timestamp, max_results, country_code, host_language):
+def main(source_url, no_results, name, timestamp):
 
     # number of pages processed
     pages = 1
@@ -25,7 +25,7 @@ def main(source_url, no_results, name, timestamp, max_results, country_code, hos
 
     yandex_isearch = 'https://yandex.com/images/'
     # does usually not deliver any results
-    yandex_isearch_language = 'https://yandex.com/images/search?text=ukraine+lang%3A' + host_language
+    # yandex_isearch_language = 'https://yandex.com/images/search?text=ukraine+lang%3A' + host_language
 
     driver = webdriver.Chrome(webdriver_path, options=options)
 
@@ -115,8 +115,7 @@ if __name__ == "__main__":
     no_results = sys.argv[2]
     name = sys.argv[3]
     timestamp = sys.argv[4]
-    max_results = sys.argv[5]
-    country_code = sys.argv[6]
-    host_language = sys.argv[7]
-    main(url, no_results, name, timestamp,
-         max_results, country_code, host_language)
+    # max_results = sys.argv[5]
+    # country_code = sys.argv[6]
+    # host_language = sys.argv[7]
+    main(url, no_results, name, timestamp)

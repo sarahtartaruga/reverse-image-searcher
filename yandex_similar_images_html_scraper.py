@@ -10,7 +10,7 @@ import csv
 import sys
 
 
-def main(source_url, no_results, name, country_code, host_language, timestamp):
+def main(source_url, no_results, name, timestamp):
 
     # first step: conduct reverse image search
     # selenium webdriver settings
@@ -81,7 +81,8 @@ def main(source_url, no_results, name, country_code, host_language, timestamp):
         while len(results) < int(no_results):
             old_amount_results = len(results)
             print('Current amount of results : ' + str(len(results)))
-            results = driver.find_elements_by_css_selector("div[class='serp-item__preview']")
+            results = driver.find_elements_by_css_selector(
+                "div[class='serp-item__preview']")
 
             driver.execute_script(
                 "window.scrollTo(0,document.body.scrollHeight)")
@@ -120,8 +121,9 @@ if __name__ == "__main__":
     url = sys.argv[1]
     no_results = sys.argv[2]
     name = sys.argv[3]
-    country_code = sys.argv[4]
-    host_language = sys.argv[5]
-    timestamp = sys.argv[6]
+    timestamp = sys.argv[4]
 
-    main(url, no_results, name, country_code, host_language, timestamp)
+    # country_code = sys.argv[4]
+    # host_language = sys.argv[5]
+
+    main(url, no_results, name, timestamp)

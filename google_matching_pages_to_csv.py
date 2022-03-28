@@ -12,9 +12,7 @@ import google_matching_pages_html_scraper
 import thumbnail_decoder
 
 
-def main(source_url, no_results, name):
-    country_code = 'us'
-    host_language = 'en'
+def main(source_url, no_results, name, country_code, host_language):
 
     # time of scraping run
     start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -157,4 +155,6 @@ if __name__ == "__main__":
     url = sys.argv[1]
     no_results = sys.argv[2]
     name = sys.argv[3]
-    main(url, no_results, name)
+    country_code = sys.argv[4]
+    host_language = sys.argv[5]
+    main(url, no_results, name, country_code, host_language)

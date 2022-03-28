@@ -12,13 +12,10 @@ import sys
 import google_similar_images_html_scraper
 import thumbnail_decoder
 
-def main(source_url, no_results, name):
+
+def main(source_url, no_results, name, country_code, host_language):
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     # timestamp = '2022-03-05_13-15-57'
-    
-    country_code = 'us'
-    host_language = 'en'
-
 
     # first step: conduct reverse image search and store html files
 
@@ -37,7 +34,8 @@ def main(source_url, no_results, name):
     thumb_dir = 'data/google/similar_images/thumbnails/' + name + '_' + timestamp + '/'
 
     # open html file
-    fname = html_dir + 'country_code_' + country_code + '_host_lang_' + host_language + '_at_' + timestamp + '.html'
+    fname = html_dir + 'country_code_' + country_code + \
+        '_host_lang_' + host_language + '_at_' + timestamp + '.html'
 
     with open(fname, 'r') as f:
         page_content = f.read()
@@ -52,7 +50,8 @@ def main(source_url, no_results, name):
 
         for result in results:
             search_result = {}
-            print('Processing search result no ' +str(len(search_results) + 1))
+            print('Processing search result no ' +
+                  str(len(search_results) + 1))
 
             search_result['rank'] = len(search_results)
 
@@ -119,8 +118,11 @@ def main(source_url, no_results, name):
     # sixth step: from csv file retrieve thumbnails
     thumbnail_decoder.main(fname_csv, thumb_dir)
 
+
 if __name__ == "__main__":
     url = sys.argv[1]
     no_results = sys.argv[2]
     name = sys.argv[3]
-    main(url, no_results, name)
+    country_code = sys.argv[4]
+    host_language = sys.argv[5]
+    main(url, no_results, name, country_code, host_language)
