@@ -15,7 +15,7 @@ def main(source_url, no_results, name, timestamp):
     # first step: conduct reverse image search
     # selenium webdriver settings
     # TODO: choose your local path to the downloaded webdriver
-    webdriver_path = '/Users/work/GitHub/plexxxi/webdriver/chromedriver'
+    webdriver_path = 'chromedriver'
     # the options object can store settings for your zombie browser
     options = Options()
     # choose incognito mode to open a private window mode
