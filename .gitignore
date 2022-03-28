@@ -5,3 +5,4 @@
 *.pyc
 /csvfiles
 /htmlfiles
+*.zip

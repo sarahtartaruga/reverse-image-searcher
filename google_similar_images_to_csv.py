@@ -21,6 +21,9 @@ def main(source_url, no_results, name):
 
 
     # first step: conduct reverse image search and store html files
+
+    # first step: conduct reverse image search and store html files
+    # add on: if data has been scraped you can uncomment this line, adapt timestamp respectively and pass same name
     google_similar_images_html_scraper.main(
         source_url, no_results, name, country_code, host_language, timestamp)
 

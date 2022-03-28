@@ -16,12 +16,14 @@ import json
 
 def main(source_url, no_results, name):
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    # use existing timestamp to change csv without scraping data from scratch
     # timestamp = '2022-03-05_21-58-35'
 
     country_code = 'us'
     host_language = 'en'
 
     # first step: conduct reverse image search and store html files
+    # add on: if data has been scraped you can uncomment this line, adapt timestamp respectively and pass same name
     yandex_similar_images_html_scraper.main(
         source_url, no_results, name, country_code, host_language, timestamp)
 
@@ -42,14 +44,12 @@ def main(source_url, no_results, name):
         soup = BeautifulSoup(page_content, 'html.parser')
         f.close()
 
-        # results = soup.find_all(
-        #     'div', {'class': ['isv-r', 'PNCib', 'MSM1fd', 'BUooTd']})
         results = soup.find_all(
             'div', {'class': 'serp-item'})
         print('Found ' + str(len(results)) + ' results')
 
         for result in results:
-            print('NEWWWW RESULT')
+            # print('NEWWWW RESULT')
             # print(type(result['data-bem']))
             search_result = {}
             print('Processing search result no ' +
@@ -60,7 +60,6 @@ def main(source_url, no_results, name):
             data = None
             try:
                 data = json.loads(result['data-bem'])
-                # print(data['serp-item']['snippet'])
             except Exception as e:
                 print(' json error: ' + str(e))
 
