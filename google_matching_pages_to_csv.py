@@ -1,12 +1,8 @@
 # this script deploys a reverse image search on google for a given source image and scrape search results
 import csv
 import sys
-from os import path
-from selenium import webdriver
 from bs4 import BeautifulSoup
 from pathlib import Path
-from selenium.webdriver.chrome.options import Options
-from bs4 import BeautifulSoup
 import datetime
 import google_matching_pages_html_scraper
 import thumbnail_decoder

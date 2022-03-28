@@ -4,18 +4,14 @@ import time
 from selenium import webdriver
 from pathlib import Path
 from selenium.webdriver.chrome.options import Options
-import datetime
-from bs4 import BeautifulSoup
-import csv
 import sys
-
 
 def main(source_url, no_results, name, country_code, host_language, timestamp):
 
     # first step: conduct reverse image search
     # selenium webdriver settings
     # TODO: choose your local path to the downloaded webdriver
-    webdriver_path = 'chromedriver'
+    webdriver_path = './chromedriver'
     # the options object can store settings for your zombie browser
     options = Options()
     # choose incognito mode to open a private window mode

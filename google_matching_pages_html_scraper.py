@@ -12,7 +12,7 @@ def main(source_url, no_results, name, timestamp, max_results, country_code, hos
 
     # selenium webdriver settings
     # TODO: choose your local path to the downloaded webdriver
-    webdriver_path = 'chromedriver'
+    webdriver_path = './chromedriver'
     # the options object can store settings for your zombie browser
     options = Options()
     # choose incognito mode to open a private window mode

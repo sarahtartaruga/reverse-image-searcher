@@ -1,10 +1,6 @@
 # this script enables to retrieve similar image data of an image  as proposed by Google reverse image search
 
-from itertools import count
-import time
-from selenium import webdriver
 from pathlib import Path
-from selenium.webdriver.chrome.options import Options
 import datetime
 from bs4 import BeautifulSoup
 import csv
