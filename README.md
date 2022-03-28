@@ -46,6 +46,8 @@ Download this repository to your computer.
 ### Selenium driver
 You need to download the [Selenium Chrome driver](https://chromedriver.chromium.org/getting-started) fitting your locally installed version of Google Chrome to run the configured headless zombie browser. Store the downloaded driver executable file in the repository folder.
 
+Tip: if the script does not run due to issues with the Chrome driver, make sure you have set the permissions to run it via the script. You can circumvent this issue by opening the driver manually one time, so the rights to execution are set.
+
 ## General Procedure
 
 The general outset is that you have an image (as url) of interest where you are interested in seeing how it circulates the web, meaning how search engines propose similar images or other related information to the image. The script works in the way that it opens a zombie browser that enters the image search for either [Google](https://images.google.com/imghp) or [Yandex](https://yandex.com/images/). By simulating a click on the reverse image button, the url is then pasted into the search bar. The result page delivers similar images and websites as search results that relate to your image. The zombie browser goes through the search results and the relevant information is then stored (delivering image, html, csv data as output). 
