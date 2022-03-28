@@ -1,5 +1,5 @@
 # Reverse Image Searcher
-This is a Python based repository to study the circulation of an image on the web quantitatively by conducting reverse image search (across search engines). The script can conduct a reverse image search on Google and/or Yandex for a given image url of interest. It does retrieve 
+This is a Python based repository to study the circulation of an image on the web (quali)quantitatively by conducting reverse image search (across search engines). The script can conduct a reverse image search on Google and/or Yandex for a given image url of interest. It does retrieve 
 1) for Google, suggested **visually similar images**, or for Yandex **similar images**, and 
 2) for Google, all **pages that include matching images**, or for Yandex **sites containing information about the image**. 
 
