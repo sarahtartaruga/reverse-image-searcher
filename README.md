@@ -8,7 +8,7 @@ As an output you retrieve the data for your project in separate folders for Yand
 ## Quick start
 To run the reverse image search for both *Google* and *Yandex* run
 
-```python3 main.py url amount_similar_images project_name country_code_google host_language_google```
+```python3 main.py <url> <amount_similar_images> <project_name> <country_code_google> <host_language_google>```
 
 Example:
 
@@ -16,9 +16,9 @@ Example:
 
 For using only *Google* or *Yandex* run 
 
-```python3 main.py url amount_similar_images project_name country_code_google host_language_google search_engine_option```
+```python3 main.py <url> <amount_similar_images> <project_name> <country_code_google> <host_language_google> <search_engine_option>```
 
-With the ```search_engine_option``` being either ```google``` or ```yandex```.
+With the ```<search_engine_option>``` being either ```google``` or ```yandex```.
 
 
 Example *Google*:
